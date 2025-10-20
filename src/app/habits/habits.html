@@ -1,0 +1,27 @@
+<div class="habits">
+  <h2>My Habits</h2>
+
+  <!-- טופס יצירת הרגל (עדיין לוקאלי, בלי שרת) -->
+  <form (ngSubmit)="addHabit()" #createForm="ngForm" class="create-form">
+    <input type="text" name="title" [(ngModel)]="newTitle" required minlength="3" placeholder="Habit title (e.g., Drink water)">
+    <input type="color" name="color" [(ngModel)]="newColor" title="Pick color">
+    <button type="submit" [disabled]="createForm.invalid">Add Habit</button>
+  </form>
+
+  <ul class="list" *ngIf="habits.length; else empty">
+    <li *ngFor="let h of habits" [style.borderLeftColor]="h.color">
+      <div class="main">
+        <span class="title">{{ h.title }}</span>
+        <small class="streak">🔥 Streak: {{ h.streak }}</small>
+      </div>
+      <div class="actions">
+        <button type="button" (click)="checkin(h)">Check-in today</button>
+        <button type="button" class="archive" (click)="archive(h)">Archive</button>
+      </div>
+    </li>
+  </ul>
+
+  <ng-template #empty>
+    <p>No habits yet. Add your first one above 👆</p>
+  </ng-template>
+</div>
