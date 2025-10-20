@@ -1,6 +1,9 @@
-
 <div class="auth-container">
   <h2>Authentication</h2>
+
+  <div *ngIf="loading" style="margin:8px 0;">Processing...</div>
+  <div *ngIf="message" style="color:green; margin:8px 0;">{{ message }}</div>
+  <div *ngIf="error" style="color:#b30000; margin:8px 0;">{{ error }}</div>
 
   <!-- הרשמה -->
   <form (ngSubmit)="onRegister()" #registerForm="ngForm">
@@ -11,7 +14,7 @@
     <label>Password:</label>
     <input type="password" [(ngModel)]="registerPassword" name="registerPassword" required />
 
-    <button type="submit" [disabled]="registerForm.invalid">Register</button>
+    <button type="submit" [disabled]="registerForm.invalid || loading">Register</button>
   </form>
 
   <hr>
@@ -25,6 +28,6 @@
     <label>Password:</label>
     <input type="password" [(ngModel)]="loginPassword" name="loginPassword" required />
 
-    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+    <button type="submit" [disabled]="loginForm.invalid || loading">Login</button>
   </form>
 </div>
