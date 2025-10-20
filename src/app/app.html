@@ -339,3 +339,12 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
 
+<h1>Tiny Habits Client</h1>
+
+<p *ngIf="message; else loading">
+  Server says: <strong>{{ message }}</strong>
+</p>
+
+<ng-template #loading>
+  <p>Loading...</p>
+</ng-template>
