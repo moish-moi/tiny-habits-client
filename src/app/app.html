@@ -20,8 +20,15 @@
 
 <h1>Tiny Habits Client</h1>
 <app-auth></app-auth>
-<app-habits></app-habits>
 
-<ng-template #loading>
-  <p>Loading...</p>
-</ng-template>
+<!-- מציגים את ההרגלים רק אם מחובר -->
+<div *ngIf="isLoggedIn">
+  <app-habits></app-habits>
+</div>
+
+<!-- ואם לא מחובר—מציגים הודעה -->
+<div *ngIf="!isLoggedIn">
+  <p style="text-align:center; color:#666;">
+    Please register/login to manage your habits.
+  </p>
+</div>

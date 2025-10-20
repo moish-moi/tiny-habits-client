@@ -19,6 +19,10 @@ export class Auth {
 
   constructor(private auth: AuthService) {}
 
+  // ✅ חדשים: נגיש לתבנית
+  get isLoggedIn(): boolean { return this.auth.isLoggedIn(); }
+  get currentEmail(): string | null { return this.auth.getEmail(); }
+
   onRegister() {
     this.resetMsgs();
     this.loading = true;
@@ -65,6 +69,14 @@ export class Auth {
         this.error = err.message || 'Login failed';
       }
     });
+  }
+
+  // --- חדש: Logout ---
+  onLogout() {
+    this.auth.logout();
+    this.message = 'Logged out 🧹';
+    // אופציונלי: נרענן את הדף שינקה state של קומפוננטות אחרות
+    // location.reload();
   }
 
   private resetMsgs() {

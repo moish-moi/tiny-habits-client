@@ -35,4 +35,23 @@ export class AuthService {
         })
       );
   }
+
+  getEmail(): string | null {
+  return localStorage.getItem('auth_email');
 }
+
+getToken(): string | null {
+  return localStorage.getItem('auth_token');
+}
+
+isLoggedIn(): boolean {
+  return !!this.getEmail() && !!this.getToken();
+}
+
+logout(): void {
+  localStorage.removeItem('auth_email');
+  localStorage.removeItem('auth_token');
+}
+}
+
+
