@@ -1,0 +1,30 @@
+
+<div class="auth-container">
+  <h2>Authentication</h2>
+
+  <!-- הרשמה -->
+  <form (ngSubmit)="onRegister()" #registerForm="ngForm">
+    <h3>Register</h3>
+    <label>Email:</label>
+    <input type="email" [(ngModel)]="registerEmail" name="registerEmail" required />
+
+    <label>Password:</label>
+    <input type="password" [(ngModel)]="registerPassword" name="registerPassword" required />
+
+    <button type="submit" [disabled]="registerForm.invalid">Register</button>
+  </form>
+
+  <hr>
+
+  <!-- התחברות -->
+  <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+    <h3>Login</h3>
+    <label>Email:</label>
+    <input type="email" [(ngModel)]="loginEmail" name="loginEmail" required />
+
+    <label>Password:</label>
+    <input type="password" [(ngModel)]="loginPassword" name="loginPassword" required />
+
+    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+  </form>
+</div>
