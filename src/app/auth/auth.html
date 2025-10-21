@@ -5,36 +5,28 @@
   <div *ngIf="message" style="color:green; margin:8px 0;">{{ message }}</div>
   <div *ngIf="error" style="color:#b30000; margin:8px 0;">{{ error }}</div>
 
-
   <div *ngIf="isLoggedIn" style="margin:8px 0; padding:8px; background:#eef7ff; border-radius:6px;">
     Connected as <strong>{{ currentEmail }}</strong>
     <button type="button" (click)="onLogout()" style="margin-left:8px;">Logout</button>
   </div>
 
-
-  <!-- הרשמה -->
   <form (ngSubmit)="onRegister()" #registerForm="ngForm">
     <h3>Register</h3>
     <label>Email:</label>
     <input type="email" [(ngModel)]="registerEmail" name="registerEmail" required />
-
     <label>Password:</label>
     <input type="password" [(ngModel)]="registerPassword" name="registerPassword" required />
-
     <button type="submit" [disabled]="registerForm.invalid || loading">Register</button>
   </form>
 
   <hr>
 
-  <!-- התחברות -->
   <form (ngSubmit)="onLogin()" #loginForm="ngForm">
     <h3>Login</h3>
     <label>Email:</label>
     <input type="email" [(ngModel)]="loginEmail" name="loginEmail" required />
-
     <label>Password:</label>
     <input type="password" [(ngModel)]="loginPassword" name="loginPassword" required />
-
     <button type="submit" [disabled]="loginForm.invalid || loading">Login</button>
   </form>
 </div>

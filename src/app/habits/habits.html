@@ -1,32 +1,29 @@
-<div class="habits">
-  <h2>My Habits</h2>
+<div class="habits-container" *ngIf="auth.isLoggedIn(); else notLogged">
+  <h2>Your Habits 🌼</h2>
 
-  <div *ngIf="loading" style="margin:8px 0;">Loading...</div>
-<div *ngIf="message" style="color:green; margin:8px 0;">{{ message }}</div>
-<div *ngIf="error" style="color:#b30000; margin:8px 0;">{{ error }}</div>
+  <div *ngIf="loading" class="spinner">Loading habits...</div>
 
+  <div *ngIf="error" class="error">{{ error }}</div>
 
-  <!-- טופס יצירת הרגל (עדיין לוקאלי, בלי שרת) -->
-  <form (ngSubmit)="addHabit()" #createForm="ngForm" class="create-form">
-    <input type="text" name="title" [(ngModel)]="newTitle" required minlength="3" placeholder="Habit title (e.g., Drink water)">
-    <input type="color" name="color" [(ngModel)]="newColor" title="Pick color">
-    <button type="submit" [disabled]="createForm.invalid">Add Habit</button>
-  </form>
+  <div *ngIf="!loading && !error && habits.length === 0" class="empty">
+    No habits yet — create your first one below 🌱
+  </div>
 
-  <ul class="list" *ngIf="habits.length; else empty">
-    <li *ngFor="let h of habits" [style.borderLeftColor]="h.color">
-      <div class="main">
-        <span class="title">{{ h.title }}</span>
-        <small class="streak">🔥 Streak: {{ h.streak }}</small>
-      </div>
-      <div class="actions">
-        <button type="button" (click)="checkin(h)">Check-in today</button>
-        <button type="button" class="archive" (click)="archive(h)">Archive</button>
-      </div>
+  <ul *ngIf="!loading && habits.length > 0">
+    <li *ngFor="let h of habits">
+      <span [style.color]="h.color">{{ h.title }}</span>
+      <button (click)="checkin(h)">✅</button>
+      <span class="streak">🔥 {{ h.streak }}</span>
     </li>
   </ul>
 
-  <ng-template #empty>
-    <p>No habits yet. Add your first one above 👆</p>
-  </ng-template>
+  <form (ngSubmit)="addHabit()">
+    <input type="text" [(ngModel)]="newTitle" name="title" placeholder="New habit title" required>
+    <input type="color" [(ngModel)]="newColor" name="color">
+    <button type="submit">Add Habit</button>
+  </form>
 </div>
+
+<ng-template #notLogged>
+  <p>Please login to view your habits.</p>
+</ng-template>

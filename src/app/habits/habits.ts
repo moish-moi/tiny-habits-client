@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HabitsService, HabitResponse } from '../services/habits.service';
+import { AuthService } from '../services/auth.service';
 
 type HabitVm = HabitResponse;
 
@@ -7,7 +8,7 @@ type HabitVm = HabitResponse;
   selector: 'app-habits',
   standalone: false,
   templateUrl: './habits.html',
-  styleUrl: './habits.css'
+  styleUrls: ['./habits.css'] // ← תיקון: היה styleUrl (יחיד) — צריך styleUrls (רבים)
 })
 export class Habits implements OnInit {
   habits: HabitVm[] = [];
@@ -18,7 +19,11 @@ export class Habits implements OnInit {
   message: string | null = null;
   error: string | null = null;
 
-  constructor(private api: HabitsService) {}
+  // ✅ נוסיף כאן את AuthService בתור public כדי שה־HTML יזהה את auth
+  constructor(
+    private api: HabitsService,
+    public auth: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.load();
@@ -60,17 +65,18 @@ export class Habits implements OnInit {
       next: () => {
         this.loading = false;
         this.message = 'Check-in done for today ✅';
-        // רענון streak מהרשימה (השרת מחזיר streak בחישוב)
-        this.load();
+        this.load(); // טוען מחדש כדי לעדכן streak
       },
       error: (e) => { this.loading = false; this.error = e.message; }
     });
   }
 
   archive(_: HabitVm) {
-    // אין לנו endpoint לארכוב כרגע — נסתיר ב־UI זמנית:
     this.error = 'Archive not implemented yet (server-side)';
   }
 
-  private resetMsgs() { this.message = null; this.error = null; }
+  private resetMsgs() {
+    this.message = null;
+    this.error = null;
+  }
 }

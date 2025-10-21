@@ -74,7 +74,7 @@ export class Auth {
   // --- חדש: Logout ---
   onLogout() {
     this.auth.logout();
-    this.message = 'Logged out 🧹';
+    this.message = 'Logged out ✅';
     // אופציונלי: נרענן את הדף שינקה state של קומפוננטות אחרות
     // location.reload();
   }
