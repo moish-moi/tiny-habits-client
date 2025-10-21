@@ -34,7 +34,7 @@ export class Auth {
           this.message = 'Registered successfully ✅';
           if (res.token) {
             localStorage.setItem('auth_token', res.token);
-            localStorage.setItem('auth_email', this.registerEmail); // שימושי ל-X-User-Email בהמשך
+            localStorage.setItem('auth_email', this.registerEmail); // לשימוש תצוגה בלבד (UI), לא נדרש לאימות
           }
         } else {
           this.error = res.message || 'Registration failed';

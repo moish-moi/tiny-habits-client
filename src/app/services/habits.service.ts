@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 
-const API_BASE = 'http://localhost:5285';
+const API_BASE = 'http://localhost:5285/api';
 
 export type HabitResponse = {
   id: number;
@@ -16,39 +16,31 @@ export type HabitResponse = {
 export class HabitsService {
   constructor(private http: HttpClient) {}
 
-  private makeHeaders(): HttpHeaders {
-    const email = localStorage.getItem('auth_email') || '';
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'X-User-Email': email
-    });
-  }
-
+  // שליפה של כל ההרגלים הפעילים למשתמש הנוכחי
   list(): Observable<HabitResponse[]> {
-    return this.http.get<HabitResponse[]>(`${API_BASE}/api/habits`, {
-      headers: this.makeHeaders()
-    }).pipe(
+    return this.http.get<HabitResponse[]>(`${API_BASE}/habits`).pipe(
       catchError(err => throwError(() => new Error(this.normalizeError(err))))
     );
   }
 
+  // יצירת הרגל חדש
   create(title: string, color?: string | null): Observable<HabitResponse> {
-    return this.http.post<HabitResponse>(`${API_BASE}/api/habits`, { title, color }, {
-      headers: this.makeHeaders()
-    }).pipe(
+    return this.http.post<HabitResponse>(`${API_BASE}/habits`, { title, color }).pipe(
       catchError(err => throwError(() => new Error(this.normalizeError(err))))
     );
   }
 
+  // סימון ביצוע של הרגל להיום
   checkinToday(habitId: number): Observable<{ id: number; date: string }> {
-    // date=null → היום (לפי השרת)
-    return this.http.post<{ id: number; date: string }>(`${API_BASE}/api/habits/${habitId}/checkins`, { date: null }, {
-      headers: this.makeHeaders()
-    }).pipe(
+    return this.http.post<{ id: number; date: string }>(
+      `${API_BASE}/habits/${habitId}/checkins`,
+      { date: null }
+    ).pipe(
       catchError(err => throwError(() => new Error(this.normalizeError(err))))
     );
   }
 
+  // טיפול בשגיאות נפוצות
   private normalizeError(err: any): string {
     if (err?.status === 401) return 'Unauthorized (login/register first)';
     if (err?.status === 404) return 'Habit not found';
