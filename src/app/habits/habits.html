@@ -1,5 +1,8 @@
 <div class="habits-container" *ngIf="auth.isLoggedIn(); else notLogged">
   <h2>Your Habits 🌼</h2>
+  <button type="button" (click)="toggleArchived()">
+    {{ showArchived ? 'Hide archived' : 'Show archived' }}
+  </button>
 
   <div *ngIf="loading" class="spinner">Loading habits...</div>
 
@@ -10,10 +13,20 @@
   </div>
 
   <ul *ngIf="!loading && habits.length > 0">
-    <li *ngFor="let h of habits">
+    <li *ngFor="let h of habits" [class.archived]="h.isArchived">
       <span [style.color]="h.color">{{ h.title }}</span>
-      <button (click)="checkin(h)">✅</button>
-      <span class="streak">🔥 {{ h.streak }}</span>
+      <ng-container *ngIf="!h.isArchived; else archivedRow">
+      <button (click)="checkin(h)">✅ Check-in</button>
+      <button (click)="archive(h)">Archive</button>
+      <button (click)="deleteHabit(h)">Delete</button>
+    </ng-container>
+
+    <ng-template #archivedRow>
+      <button (click)="unarchive(h)">Unarchive</button>
+      <button (click)="deleteHabit(h)">Delete</button>
+    </ng-template>
+
+    <span class="streak">🔥 {{ h.streak }}</span>
     </li>
   </ul>
 
@@ -23,6 +36,8 @@
     <button type="submit">Add Habit</button>
   </form>
 </div>
+
+
 
 <ng-template #notLogged>
   <p>Please login to view your habits.</p>

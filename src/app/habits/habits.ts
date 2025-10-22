@@ -18,6 +18,7 @@ export class Habits implements OnInit {
   loading = false;
   message: string | null = null;
   error: string | null = null;
+  showArchived = false; 
 
   // ✅ נוסיף כאן את AuthService בתור public כדי שה־HTML יזהה את auth
   constructor(
@@ -32,10 +33,15 @@ export class Habits implements OnInit {
   load() {
     this.resetMsgs();
     this.loading = true;
-    this.api.list().subscribe({
+    this.api.list(this.showArchived).subscribe({
       next: (items) => { this.habits = items; this.loading = false; },
       error: (e) => { this.loading = false; this.error = e.message; }
     });
+  }
+
+  toggleArchived() {
+    this.showArchived = !this.showArchived;
+    this.load();
   }
 
   addHabit() {
@@ -71,9 +77,51 @@ export class Habits implements OnInit {
     });
   }
 
-  archive(_: HabitVm) {
-    this.error = 'Archive not implemented yet (server-side)';
+    // --- פעולות על הרגלים קיימים ---
+  archive(h: HabitVm) {
+    this.resetMsgs();
+    this.loading = true;
+
+    this.api.archive(h.id).subscribe({
+      next: () => {
+        this.loading = false;
+        this.message = `Habit "${h.title}" archived 🗂️`;
+        this.load(); // ריענון הרשימה
+      },
+      error: (e) => { this.loading = false; this.error = e.message; }
+    });
   }
+
+  unarchive(h: HabitVm) {
+    this.resetMsgs();
+    this.loading = true;
+
+    this.api.unarchive(h.id).subscribe({
+      next: () => {
+        this.loading = false;
+        this.message = `Habit "${h.title}" restored ✅`;
+        this.load();
+      },
+      error: (e) => { this.loading = false; this.error = e.message; }
+    });
+  }
+
+  deleteHabit(h: HabitVm) {
+    if (!confirm(`Are you sure you want to delete "${h.title}"?`)) return;
+
+    this.resetMsgs();
+    this.loading = true;
+
+    this.api.delete(h.id).subscribe({
+      next: () => {
+        this.loading = false;
+        this.message = `Habit "${h.title}" deleted 🗑️`;
+        this.load();
+      },
+      error: (e) => { this.loading = false; this.error = e.message; }
+    });
+  }
+
 
   private resetMsgs() {
     this.message = null;

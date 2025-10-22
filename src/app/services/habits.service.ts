@@ -17,11 +17,16 @@ export class HabitsService {
   constructor(private http: HttpClient) {}
 
   // שליפה של כל ההרגלים הפעילים למשתמש הנוכחי
-  list(): Observable<HabitResponse[]> {
-    return this.http.get<HabitResponse[]>(`${API_BASE}/habits`).pipe(
-      catchError(err => throwError(() => new Error(this.normalizeError(err))))
-    );
-  }
+ list(includeArchived = false): Observable<HabitResponse[]> {
+  const params = includeArchived ? { includeArchived: 'true' } : undefined;
+  return this.http.get<HabitResponse[]>(
+    `${API_BASE}/habits`,
+    { params }
+  ).pipe(
+    catchError(err => throwError(() => new Error(this.normalizeError(err))))
+  );
+}
+
 
   // יצירת הרגל חדש
   create(title: string, color?: string | null): Observable<HabitResponse> {
@@ -39,6 +44,25 @@ export class HabitsService {
       catchError(err => throwError(() => new Error(this.normalizeError(err))))
     );
   }
+
+  archive(id: number) {
+  return this.http.put<void>(`${API_BASE}/habits/${id}/archive`, {}).pipe(
+    catchError(err => throwError(() => new Error(this.normalizeError(err))))
+  );
+}
+
+unarchive(id: number) {
+  return this.http.put<void>(`${API_BASE}/habits/${id}/unarchive`, {}).pipe(
+    catchError(err => throwError(() => new Error(this.normalizeError(err))))
+  );
+}
+
+delete(id: number) {
+  return this.http.delete<void>(`${API_BASE}/habits/${id}`).pipe(
+    catchError(err => throwError(() => new Error(this.normalizeError(err))))
+  );
+}
+
 
   // טיפול בשגיאות נפוצות
   private normalizeError(err: any): string {
